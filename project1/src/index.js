@@ -9,6 +9,10 @@
 		let currentInt;
 		let walkerCreateAmount = 1;
 		let headType = "head", expType = "explosion";
+		let colorType = "random", explosionCircleColor = "white", explosionLineColor = "white";
+
+
+
 		// #1 call the init function after the pages loads
 		window.onload = function(){
 			console.log("page loaded!");		
@@ -41,14 +45,23 @@
 				walkerCreateAmount = e.target.value;
 			};
 
+			//Set the WalkerWorks color
 
-			/*
-			//Create a couple walkers
-			walkerArray[0] = new Walker(320, 240, "green", 10, expType);
-			walkerArray[1] = new Walker(320, 240, "red", 15, expType);
-			walkerArray[2] = new Walker(320, 240, "blue", 5, expType);
-			walkerArray[3] = new Walker(320, 240, "yellow", 10, expType);
-			*/
+			document.querySelector("#colorType").onchange = function(e){
+
+				colorType = e.target.value;
+
+			};
+
+			document.querySelector("#explosionCircleColor").onchange = function(e){
+				explosionCircleColor = e.target.value;
+			}
+
+			document.querySelector("#explosionLineColor").onchange = function(e){
+				explosionLineColor = e.target.value;
+			}
+
+
 
 			window.onclick = function(e){
 				//Create a walker of a random color at the point the user clicked
@@ -60,7 +73,7 @@
 						for(let i = 0; i < walkerCreateAmount; i++)
 						{
 							//walkerArray.push(new Walker(e.clientX, e.clientY, getRandomColor(), dfLIB.getRandomInt(5,20), headType));
-							walkerArray.push(new Walker(e.clientX, e.clientY, "purple", dfLIB.getRandomInt(5,20), headType));
+							walkerArray.push(new Walker(e.clientX, e.clientY, colorType, dfLIB.getRandomInt(5,20), headType));
 						}
 					}
 				}
@@ -76,7 +89,7 @@
 		{
 			//Reset the loop
 			
-			cls();
+			dfLIB.clearScreen(ctx);
 			
 			if(walkerArray.length > 0)
 			{
@@ -106,34 +119,93 @@
 			let walkerScore = myWalker.boundaryCheck();
 			if (walkerScore == 2)
 			{
-				//If the boundaryCheck returns 2 (the head reached it's goal), then populate the walker array with the walker fireworks!
-				let randNum = dfLIB.getRandomInt(8,12);
-				let randSize = dfLIB.getRandomInt(10,25);
-				let randTime = dfLIB.getRandomInt(30, 120);
-				for(let i = 0; i < randNum; i++)
-				{
-					walkerArray.push(new Walker(myWalker.x, myWalker.y, myWalker.explosionVariant, randSize, expType, randTime));
-				}
+				//populate the walker array with the walker fireworks!
+				createExplosion(myWalker);
 				myWalker.isAlive = false;
 			}
 		}
 		
-		// UTILS
-		function getRandomColor(){
-			function getByte(){
-				return 55 + Math.round(Math.random() * 200);
-			}
-			return "rgba(" + getByte() + "," + getByte() + "," + getByte() + ",.8)";
-		}
-		
-		function cls(){
-			ctx.save();
-			ctx.globalAlpha = 0.03;
-			ctx.fillStyle = "black";
-			ctx.fillRect(0,0,640,480);
-			ctx.restore();
-		}
 		
 		function flipWeightedCoin(weight = 0.5){
 			return Math.random() < weight;
+		}
+
+		function createExplosion(myWalker)
+		{
+			//This will be a bit ugly because I need to make a few different firework types
+			
+			let randSize = dfLIB.getRandomInt(15,25);
+			let randTime = dfLIB.getRandomInt(30, 120);
+			let explosionColor;
+			for(let i = 0; i < 16; i++)
+			{
+				//Alternate colors that are being added
+				if(i%2)
+				{
+					switch(myWalker.explosionVariant)
+					{
+						case("purple"):
+						explosionColor = "purple";
+
+						break;	
+						case("green"):
+						explosionColor = "green";
+
+						break;
+						case("orange"):
+						explosionColor = "orange";
+
+						break;
+						case("random"):
+						explosionColor = dfLIB.getRandomColor();
+
+						break;
+						default:
+							console.log("whoops");
+							break;
+					}
+				}
+				else
+				{
+					switch(myWalker.explosionVariant)
+					{
+						case("purple"):
+						explosionColor = "yellow";
+
+						break;	
+						case("green"):
+						explosionColor = "pink";
+
+						break;
+						case("orange"):
+						explosionColor = "blue";
+
+						break;
+						case("random"):
+						explosionColor = dfLIB.getRandomColor();
+
+						break;
+						default:
+							console.log("whoops");
+							break;
+					}
+				}
+
+
+
+				walkerArray.push(new Walker(myWalker.x, myWalker.y, explosionColor, randSize, expType, randTime));
+			}
+
+			//Create explosion effects at the point where the firework head died
+
+			dfLIB.drawCircle(ctx, myWalker.x, myWalker.y, 30, explosionCircleColor);		
+
+			for(let i = 0; i < Math.PI * 2; i += Math.PI / 9)
+			{
+				let xVariant = Math.sin(i) * 100;
+				let yVariant = Math.cos(i) * 100;
+
+				dfLIB.drawLine(ctx, myWalker.x - xVariant, myWalker.y - yVariant, myWalker.x + xVariant, myWalker.y + yVariant, 1, explosionLineColor);
+			}
+
 		}

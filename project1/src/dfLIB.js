@@ -6,7 +6,8 @@ let dfLIB = {
 
 getRandomColor(){
     const getByte = _ => 55 + Math.round(Math.random() * 200);
-    return `rgba(${getByte()}, ${getByte()}, ${getByte()}, ${Math.random()}`;
+    //return `rgba(${getByte()}, ${getByte()}, ${getByte()}, ${Math.random()}`;
+    return `rgba(${getByte()}, ${getByte()}, ${getByte()}, 1`;
 
   },
 
@@ -53,22 +54,60 @@ drawRectangle(ctx,x,y,width,height,fillStyle="black",lineWidth=0,strokeStyle="bl
     ctx.save();
     ctx.beginPath();
     ctx.rect(x,y,width,height);
-    ctx.fillStyle = fillStyle;
+    ctx.fillStyle = this.randomColorCheck(fillStyle);
     
     ctx.fill();
     if(lineWidth > 0)
     {
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = strokeStyle;
+        ctx.strokeStyle = this.randomColorCheck(fillStyle);
         ctx.stroke();
     }
     
     ctx.restore();
 },
+
+drawLine(ctx,startX,startY,endX,endY,lineWidth=5,strokeStyle="black"){
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(endX,endY);
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = this.randomColorCheck(strokeStyle);
+    ctx.stroke();
+    ctx.restore();
+},
+
+drawCircle(ctx,x,y,radius,fillStyle="black",lineWidth=0,strokeStyle="black"){
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,Math.PI * 2);
+    ctx.fillStyle = this.randomColorCheck(fillStyle);
+    
+    ctx.fill();
+    if(lineWidth > 0)
+    {
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = this.randomColorCheck(strokeStyle);
+        ctx.stroke();
+    }
+    
+    ctx.restore();
+},
+
+
+
+
+
 clearScreen(ctx)
-{
-    setTimeout(function(){dfLIB.clearScreen(ctx)}, dfLIB.getRandomInt(5000,10000));
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+{   
+    ctx.save();
+	ctx.globalAlpha = 0.03;
+	ctx.fillStyle = "black";
+	ctx.fillRect(0,0,canvasWidth,canvasHeight);
+	ctx.restore();
 },
 
 setStyles(ctx)
@@ -77,6 +116,18 @@ setStyles(ctx)
     ctx.fillStyle = dfLIB.getRandomColor();
     ctx.strokeStyle = dfLIB.getRandomColor();
     ctx.lineWidth = dfLIB.getRandomInt(1,10);
+},
+
+randomColorCheck(color)
+{
+    if(color == "random")
+    {
+        return this.getRandomColor();
+    }
+    else
+    {
+        return color;
+    }
 }
 
 
@@ -90,7 +141,7 @@ if (window)
 {
     window["dfLIB"] = dfLIB;
 } else {
-    throw "'windiw' is not defined!";
+    throw "'window' is not defined!";
 }
 
 })();

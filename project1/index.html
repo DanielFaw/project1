@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles/default-styles.css">
+	<link rel="stylesheet" href="styles/default-styles.css">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 	<title>WalkerWorks!</title>
     <script src="src/dfLIB.js"></script>
     <script src="src/Walker.js"></script>
@@ -13,17 +14,54 @@
 		Get a real browser!
 	</canvas>
 	<br>
-	<p>Click to create random walker fireworks! Choose from the settings below to customize the color, size, and others!</p>
+	<h1>WalkerWorks!</h1>
+	<p>The theme I'm going after is randomness, but in this case it's a more controlled randomness</p>
+	<p>Click to create random walker fireworks! Choose from the settings below to customize the speed, amount, and color!</p>
+	<hr>
 	<p>Speed Control</p>
 	<section id="speedControl">
 		<input type="radio" name="speed" value="fast"> Fast
   		<input checked type="radio" name="speed" value="normal"> Normal
   		<input type="radio" name="speed" value="slow"> Slow
 	</section>
-	<br>
+	<hr>
 	<p>Amount of WalkerWorks Made per Click:</p>
 	<section id="createAmount">
 		<input type="number" value="1">   		
 	</section>
+	<hr>
+	<p>Color of the WalkerWork explosion:</p>
+	<section id="colorType">
+			<select name="colors" id="colors">
+			<option value="random" selected>Random Colors</option>
+			<option value="purple">Purple and Yellow</option>
+			<option value="orange">Blue and Orange</option>
+			<option value="green">Green and Pink</option>		
+		</select>
+	</section>
+	<p>Color of the explosion circle:</p>
+	<section id="explosionCircleColor">
+		<select name="colors" id="colors">
+		<option value="white" selected>White</option>
+		<option value="random">Random Colors</option>
+		<option value="purple">Purple</option>
+		<option value="orange">Orange</option>
+		<option value="red">Red</option>
+		<option value="blue">Blue</option>
+		<option value="green">Green</option>	
+	</select>
+</section>
+	<p>Color of the explosion lines:</p>
+	<section id="explosionLineColor">
+		<select name="colors" id="colors">
+		<option value="white" selected>White</option>
+		<option value="random">Random Colors</option>
+		<option value="purple">Purple</option>
+		<option value="orange">Orange</option>
+		<option value="red">Red</option>
+		<option value="blue">Blue</option>
+		<option value="green">Green</option>	
+	</select>
+</section>
 </body>
 </html>
