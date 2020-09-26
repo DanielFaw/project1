@@ -7,7 +7,8 @@
 		const slowFps = 10, medFps = 30, fastFps = 60;
 		let currentFps = medFps;
 		let currentInt;
-		let walkerCreateAmount = 0;
+		let walkerCreateAmount = 1;
+		let headType = "head", expType = "explosion";
 		// #1 call the init function after the pages loads
 		window.onload = function(){
 			console.log("page loaded!");		
@@ -41,12 +42,13 @@
 			};
 
 
-
+			/*
 			//Create a couple walkers
-			walkerArray[0] = new Walker(320, 240, "green", 10);
-			walkerArray[1] = new Walker(320, 240, "red", 15);
-			walkerArray[2] = new Walker(320, 240, "blue", 5);
-			walkerArray[3] = new Walker(320, 240, "yellow", 10);
+			walkerArray[0] = new Walker(320, 240, "green", 10, expType);
+			walkerArray[1] = new Walker(320, 240, "red", 15, expType);
+			walkerArray[2] = new Walker(320, 240, "blue", 5, expType);
+			walkerArray[3] = new Walker(320, 240, "yellow", 10, expType);
+			*/
 
 			window.onclick = function(e){
 				//Create a walker of a random color at the point the user clicked
@@ -57,7 +59,8 @@
 					{
 						for(let i = 0; i < walkerCreateAmount; i++)
 						{
-							walkerArray.push(new Walker(e.clientX, e.clientY, getRandomColor(), dfLIB.getRandomInt(5,20)));
+							//walkerArray.push(new Walker(e.clientX, e.clientY, getRandomColor(), dfLIB.getRandomInt(5,20), headType));
+							walkerArray.push(new Walker(e.clientX, e.clientY, "purple", dfLIB.getRandomInt(5,20), headType));
 						}
 					}
 				}
@@ -82,9 +85,17 @@
 					drawWalker(walkerArray[i]);
 				}
 			}
+
+			//This filters out any dead walkers
+			
+			walkerArray = walkerArray.filter(function (e) {
+				return e.isAlive;
+			});
+
 			
 		}
-		
+
+
 		
 		function drawWalker(myWalker){
 			ctx.save();
@@ -92,7 +103,19 @@
 			ctx.fillRect(myWalker.x-myWalker.width/2,myWalker.y-myWalker.width/2,myWalker.width/2,myWalker.width/2);
 			ctx.restore();
 			myWalker.move();
-			myWalker.boundaryCheck();
+			let walkerScore = myWalker.boundaryCheck();
+			if (walkerScore == 2)
+			{
+				//If the boundaryCheck returns 2 (the head reached it's goal), then populate the walker array with the walker fireworks!
+				let randNum = dfLIB.getRandomInt(8,12);
+				let randSize = dfLIB.getRandomInt(10,25);
+				let randTime = dfLIB.getRandomInt(30, 120);
+				for(let i = 0; i < randNum; i++)
+				{
+					walkerArray.push(new Walker(myWalker.x, myWalker.y, myWalker.explosionVariant, randSize, expType, randTime));
+				}
+				myWalker.isAlive = false;
+			}
 		}
 		
 		// UTILS
